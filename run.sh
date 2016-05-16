@@ -11,16 +11,6 @@ if [ "${WERCKER_SLACK_NOTIFIER_CHANNEL:0:1}" = '#' ]; then
   export WERCKER_SLACK_NOTIFIER_CHANNEL=${WERCKER_SLACK_NOTIFIER_CHANNEL:1}
 fi
 
-# if no username is provided use the default - werckerbot
-if [ -z "$WERCKER_SLACK_NOTIFIER_USERNAME" ]; then
-  export WERCKER_SLACK_NOTIFIER_USERNAME=werckerbot
-fi
-
-# if no icon-url is provided for the bot use the default wercker icon
-if [ -z "$WERCKER_SLACK_NOTIFIER_ICON_URL" ]; then
-  export WERCKER_SLACK_NOTIFIER_ICON_URL="https://secure.gravatar.com/avatar/a08fc43441db4c2df2cef96e0cc8c045?s=140"
-fi
-
 # check if this event is a build or deploy
 if [ -n "$DEPLOY" ]; then
   # its a deploy!
@@ -32,14 +22,14 @@ else
   export ACTION_URL=$WERCKER_BUILD_URL
 fi
 
-export MESSAGE="<$ACTION_URL|$ACTION> for $WERCKER_APPLICATION_NAME by $WERCKER_STARTED_BY has $WERCKER_RESULT on branch $WERCKER_GIT_BRANCH"
-export FALLBACK="$ACTION for $WERCKER_APPLICATION_NAME by $WERCKER_STARTED_BY has $WERCKER_RESULT on branch $WERCKER_GIT_BRANCH"
-export COLOR="good"
+export REPO_NAME="$WERCKER_GIT_DOMAIN/$WERCKER_GIT_OWNER/$WERCKER_GIT_REPOSITORY"
+export BC_TEXT="[$REPO_NAME](https://$REPO_NAME)"
+export MESSAGE="[$ACTION]($ACTION_URL) for $WERCKER_APPLICATION_NAME by $WERCKER_STARTED_BY has $WERCKER_RESULT on branch $WERCKER_GIT_BRANCH"
+export COLOR="green"
 
 if [ "$WERCKER_RESULT" = "failed" ]; then
   export MESSAGE="$MESSAGE at step: $WERCKER_FAILED_STEP_DISPLAY_NAME"
-  export FALLBACK="$FALLBACK at step: $WERCKER_FAILED_STEP_DISPLAY_NAME"
-  export COLOR="danger"
+  export COLOR="red"
 fi
 
 # construct the json
@@ -51,11 +41,9 @@ if [ -n "$WERCKER_SLACK_NOTIFIER_CHANNEL" ]; then
 fi
 
 json=$json"
-    \"username\": \"$WERCKER_SLACK_NOTIFIER_USERNAME\",
-    \"icon_url\":\"$WERCKER_SLACK_NOTIFIER_ICON_URL\",
+    \"text\": \"$BC_TEXT\",
     \"attachments\":[
       {
-        \"fallback\": \"$FALLBACK\",
         \"text\": \"$MESSAGE\",
         \"color\": \"$COLOR\"
       }
