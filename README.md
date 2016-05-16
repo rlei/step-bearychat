@@ -3,6 +3,8 @@
 A BearyChat notifier written in `bash` and `curl`. Make sure you create a BearyChat
 webhook first.
 
+[![wercker status](https://app.wercker.com/status/5739ae8f6701b8335f043d2c/s "wercker status")](https://app.wercker.com/project/bykey/5739ae8f6701b8335f043d2c)
+
 This repo is based on Wercker's official [Slack notifier](https://github.com/wercker/step-slack).
 
 # Options
