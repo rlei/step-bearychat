@@ -21,7 +21,7 @@ builds or deploys.
 ```yaml
 build:
     after-steps:
-        - bearychat-notifier:
+        - rlei/bearychat-notifier@0.0.2:
             url: $BEARYCHAT_URL
             channel: notifications
             branch: master
@@ -36,16 +36,13 @@ This url is then exposed as an environment variable (in this case
 
 The MIT License (MIT)
 
-# Changelog (of the original step-slack)
+# Changelog
 
-## 1.2.0
+## 0.0.2
 
-- added `branch` option
+- the first actually working version
 
-## 1.1.0
+## 0.0.1
 
-- `channel` is now optional (wercker/step-slack#5)
+- forked from [Slack notifier](https://github.com/wercker/step-slack) 1.2.0
 
-## 1.0.0
-
-- Initial release
