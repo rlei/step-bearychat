@@ -1,10 +1,10 @@
-name: slack-notifier
-version: 1.2.1
-description: Posts wercker build/deploy status to a Slack channel.
+name: bearychat-notifier
+version: 0.0.1
+description: Posts wercker build/deploy status to a BearyChat channel.
 keywords:
   - notification
   - webhook
-  - slack
+  - bearychat
 properties:
   url:
     type: string
@@ -12,13 +12,7 @@ properties:
   channel:
     type: string
     required: false
-  username:
-    type: string
-    required: false
   notify_on:
-    type: string
-    required: false
-  icon_url:
     type: string
     required: false
   branch:
