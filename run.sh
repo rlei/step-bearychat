@@ -1,14 +1,14 @@
 #!/bin/bash
 #source build-esen.sh
 
-# check if slack webhook url is present
-if [ -z "$WERCKER_SLACK_NOTIFIER_URL" ]; then
-  fail "Please provide a Slack webhook URL"
+# check if bearychat webhook url is present
+if [ -z "$WERCKER_BEARYCHAT_NOTIFIER_URL" ]; then
+  fail "Please provide a BearyChat webhook URL"
 fi
 
 # check if a '#' was supplied in the channel name
-if [ "${WERCKER_SLACK_NOTIFIER_CHANNEL:0:1}" = '#' ]; then
-  export WERCKER_SLACK_NOTIFIER_CHANNEL=${WERCKER_SLACK_NOTIFIER_CHANNEL:1}
+if [ "${WERCKER_BEARYCHAT_NOTIFIER_CHANNEL:0:1}" = '#' ]; then
+  export WERCKER_BEARYCHAT_NOTIFIER_CHANNEL=${WERCKER_BEARYCHAT_NOTIFIER_CHANNEL:1}
 fi
 
 # check if this event is a build or deploy
@@ -36,8 +36,8 @@ fi
 json="{"
 
 # channels are optional, dont send one if it wasnt specified
-if [ -n "$WERCKER_SLACK_NOTIFIER_CHANNEL" ]; then 
-    json=$json"\"channel\": \"#$WERCKER_SLACK_NOTIFIER_CHANNEL\","
+if [ -n "$WERCKER_BEARYCHAT_NOTIFIER_CHANNEL" ]; then 
+    json=$json"\"channel\": \"#$WERCKER_BEARYCHAT_NOTIFIER_CHANNEL\","
 fi
 
 json=$json"
@@ -51,21 +51,21 @@ json=$json"
 }"
 
 # skip notifications if not interested in passed builds or deploys
-if [ "$WERCKER_SLACK_NOTIFIER_NOTIFY_ON" = "failed" ]; then
+if [ "$WERCKER_BEARYCHAT_NOTIFIER_NOTIFY_ON" = "failed" ]; then
 	if [ "$WERCKER_RESULT" = "passed" ]; then
 		return 0
 	fi
 fi
 
 # skip notifications if not on the right branch
-if [ -n "$WERCKER_SLACK_NOTIFIER_BRANCH" ]; then
-    if [ "$WERCKER_SLACK_NOTIFIER_BRANCH" != "$WERCKER_GIT_BRANCH" ]; then
+if [ -n "$WERCKER_BEARYCHAT_NOTIFIER_BRANCH" ]; then
+    if [ "$WERCKER_BEARYCHAT_NOTIFIER_BRANCH" != "$WERCKER_GIT_BRANCH" ]; then
         return 0
     fi
 fi
 
-# post the result to the slack webhook
-RESULT=$(curl -d "payload=$json" -s "$WERCKER_SLACK_NOTIFIER_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}")
+# post the result to the webhook
+RESULT=$(curl -d "payload=$json" -s "$WERCKER_BEARYCHAT_NOTIFIER_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}")
 cat "$WERCKER_STEP_TEMP/result.txt"
 
 if [ "$RESULT" = "500" ]; then
