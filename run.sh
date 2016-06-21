@@ -65,6 +65,7 @@ if [ -n "$WERCKER_BEARYCHAT_NOTIFIER_BRANCH" ]; then
 fi
 
 # post the result to the webhook
+echo curl -d "payload=$json" -s "$WERCKER_BEARYCHAT_NOTIFIER_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}"
 RESULT=$(curl -d "payload=$json" -s "$WERCKER_BEARYCHAT_NOTIFIER_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}")
 cat "$WERCKER_STEP_TEMP/result.txt"
 
