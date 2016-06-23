@@ -14,21 +14,23 @@ fi
 # check if this event is a build or deploy
 if [ -n "$DEPLOY" ]; then
   # its a deploy!
-  export ACTION="deploy"
+  export ACTION="Deploy"
   export ACTION_URL=$WERCKER_DEPLOY_URL
 else
   # its a build!
-  export ACTION="build"
+  export ACTION="Build"
   export ACTION_URL=$WERCKER_BUILD_URL
 fi
 
 export REPO_NAME="$WERCKER_GIT_DOMAIN/$WERCKER_GIT_OWNER/$WERCKER_GIT_REPOSITORY"
 export BC_TEXT="[$REPO_NAME](https://$REPO_NAME)"
-export MESSAGE="[$ACTION]($ACTION_URL) for $WERCKER_APPLICATION_NAME by $WERCKER_STARTED_BY has $WERCKER_RESULT on branch $WERCKER_GIT_BRANCH"
+export TITLE="$ACTION passed"
+export MESSAGE="[$ACTION]($ACTION_URL) for \`$WERCKER_APPLICATION_NAME\` by $WERCKER_STARTED_BY has $WERCKER_RESULT on branch \`$WERCKER_GIT_BRANCH\`"
 export COLOR="green"
 
 if [ "$WERCKER_RESULT" = "failed" ]; then
-  export MESSAGE="$MESSAGE at step: $WERCKER_FAILED_STEP_DISPLAY_NAME"
+  export TITLE="$ACTION failed"
+  export MESSAGE="$MESSAGE at step: \`$WERCKER_FAILED_STEP_DISPLAY_NAME\`"
   export COLOR="red"
 fi
 
@@ -44,6 +46,7 @@ json=$json"
     \"text\": \"$BC_TEXT\",
     \"attachments\":[
       {
+        \"title\": \"$TITLE\",
         \"text\": \"$MESSAGE\",
         \"color\": \"$COLOR\"
       }
